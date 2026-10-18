@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteShell";
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://kitsu-play-app.vercel.app");
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kitsu-play-app-iamrobi693-8567.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "KitsuPlay — Official Android Download", template: "%s | KitsuPlay" },
