@@ -45,3 +45,44 @@
  .release-meta span+span{padding-left:10px}
 }
 @media(prefers-reduced-motion:reduce){.button:hover,.feature-card:hover{transform:none}}
+
+
+/* Real KitsuPlay app screenshot in the homepage hero */
+.hero-visual.hero-screenshot-wrap{
+  height:auto;
+  min-height:440px;
+  transform:none;
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-app-screenshot{
+  display:block;
+  width:min(100%, 360px);
+  height:auto;
+  max-height:520px;
+  object-fit:contain;
+  object-position:center;
+  border:1px solid rgba(255,155,92,.24);
+  border-radius:22px;
+  background:#111;
+  box-shadow:0 24px 80px rgba(0,0,0,.45),0 0 55px rgba(255,113,56,.12);
+}
+@media(max-width:900px){
+  .hero-visual.hero-screenshot-wrap{min-height:0;transform:none}
+  .hero-app-screenshot{width:min(100%,330px);max-height:500px}
+}
+@media(max-width:680px){
+  .hero-visual.hero-screenshot-wrap{
+    height:auto;
+    min-height:0;
+    margin:22px auto 0;
+    transform:none;
+  }
+  .hero-app-screenshot{
+    width:min(100%,300px);
+    max-height:460px;
+    border-radius:18px;
+  }
+}
