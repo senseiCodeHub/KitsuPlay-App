@@ -2,12 +2,22 @@ export type GitHubAsset = { name: string; size: number; browser_download_url: st
 export type GitHubRelease = { id: number; name: string | null; tag_name: string; body: string | null; html_url: string; published_at: string | null; prerelease: boolean; draft: boolean; assets: GitHubAsset[] };
 const API = "https://api.github.com/repos/senseiCodeHub/KitsuPlay-App/releases";
 export function apkAsset(release: GitHubRelease) { return release.assets.find((a) => a.name.toLowerCase().endsWith(".apk")); }
+
+// Fetch every published release in pages, so older versions aren't silently omitted.
 export async function getReleases(): Promise<GitHubRelease[]> {
   try {
-    const res = await fetch(API + "?per_page=30", { headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }, next: { revalidate: 300 } });
-    if (!res.ok) return [];
-    const releases = await res.json() as GitHubRelease[];
-    return releases.filter((r) => !r.draft);
+    const all: GitHubRelease[] = [];
+    for (let page = 1; page <= 10; page++) {
+      const res = await fetch(`${API}?per_page=100&page=${page}`, {
+        headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
+        next: { revalidate: 300 },
+      });
+      if (!res.ok) return all.filter((r) => !r.draft);
+      const releases = await res.json() as GitHubRelease[];
+      all.push(...releases);
+      if (releases.length < 100) break;
+    }
+    return all.filter((r) => !r.draft);
   } catch { return []; }
 }
 export async function getLatestStableRelease(): Promise<GitHubRelease | null> {
