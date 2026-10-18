@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { apkAsset, formatBytes, getLatestStableRelease } from "@/lib/github-releases";
-export const metadata: Metadata = { title: "Installation guide — KitsuPlay", description: "Learn how to download and install the KitsuPlay Android APK." };
+export const metadata: Metadata = { title: "Installation Guide", description: "Learn how to safely download and install the official KitsuPlay Android APK." };
 export default async function InstallPage() {
   const release = await getLatestStableRelease(); const apk = release ? apkAsset(release) : undefined;
   const steps = [["01","Download the APK","Use the official download button to get the latest stable APK from GitHub Releases."],["02","Open the downloaded file","Open the APK from your browser’s downloads list or your device’s Downloads folder."],["03","Allow installation if prompted","Android may ask you to allow your browser or file manager to install unknown apps. Only enable this for the app you used to open the APK."],["04","Install and open KitsuPlay","Follow the Android installation prompt. If installation fails, check that the APK downloaded completely and that your device is compatible."]];
