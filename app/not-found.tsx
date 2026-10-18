@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound() { return <section className="inner-page"><div className="container empty-state"><span className="section-kicker">404 · NOT FOUND</span><h1>This page wandered off.</h1><p>Let’s get you back to KitsuPlay.</p><Link className="button button-primary" href="/">Back to home ↗</Link></div></section>; }
