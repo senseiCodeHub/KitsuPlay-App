@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Sitemap: https://kitsu-play-app-iamrobi693-8567.vercel.app/sitemap.xml
