@@ -58,6 +58,15 @@ export function AndroidIcon({ className, size }: IconProps) {
   return <svg {...base(size)} className={className}><path d="M5 11.5a7 7 0 0 1 14 0v6.2a1.3 1.3 0 0 1-1.3 1.3H6.3A1.3 1.3 0 0 1 5 17.7v-6.2Z" /><path d="m7.4 5.6 1.4 2.1M16.6 5.6l-1.4 2.1" /><path d="M9.3 14.4h.01M14.7 14.4h.01" /></svg>;
 }
 
+export function CopyIcon({ className, size }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <rect x="9" y="9" width="11" height="11" rx="2.4" />
+      <path d="M15 5.5a1.5 1.5 0 0 0-1.5-1.5H5.5A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15" />
+    </svg>
+  );
+}
+
 export function ClockIcon({ className, size }: IconProps) {
   return <svg {...base(size)} className={className}><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></svg>;
 }

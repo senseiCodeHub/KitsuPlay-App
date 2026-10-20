@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { apkAsset, formatBytes, formatDate, formatDownloads, getLatestStableRelease, getReleases } from "@/lib/github-releases";
+import {
+  apkAsset,
+  formatBytes,
+  formatDate,
+  formatDownloads,
+  getReleases,
+  sortReleases,
+  toReleaseView
+} from "@/lib/github-releases";
 import { ArrowRightIcon, DownloadIcon, ShieldIcon } from "@/components/Icons";
-
-function plainText(line: string) {
-  return line
-    .replace(/^#{1,6}\s*/, "")
-    .replace(/^[-*]\s*/, "• ")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/(\*\*|__|`)/g, "");
-}
+import { ReleasesExplorer } from "@/components/ReleasesExplorer";
 
 export const metadata: Metadata = {
   title: "All Releases",
@@ -20,10 +20,14 @@ export const metadata: Metadata = {
 };
 
 export default async function ReleasesPage() {
-  const releases = await getReleases();
-  const latestStable = await getLatestStableRelease();
+  const releases = sortReleases(await getReleases());
+  const latestStable = releases.find((release) => !release.prerelease && apkAsset(release)) ?? null;
   const latestApk = latestStable ? apkAsset(latestStable) : undefined;
   const totalDownloads = releases.reduce((sum, release) => sum + (apkAsset(release)?.download_count ?? 0), 0);
+  const preReleases = releases.filter((release) => release.prerelease).length;
+  const views = releases.map(toReleaseView);
+  const newest = releases[0];
+  const newestApk = newest ? apkAsset(newest) : undefined;
 
   return (
     <section className="page">
@@ -36,8 +40,8 @@ export default async function ReleasesPage() {
             <span className="text-gradient">Nothing hidden.</span>
           </h1>
           <p>
-            Download the latest stable KitsuPlay build or roll back to any previous version. Each entry is pulled straight
-            from the project&apos;s public GitHub Releases.
+            Download the latest stable KitsuPlay build or roll back to any previous version. Filter by channel, compare
+            sizes and read every changelog — each entry is pulled straight from the project&apos;s public GitHub Releases.
           </p>
           <div className="stats">
             <div>
@@ -52,13 +56,20 @@ export default async function ReleasesPage() {
               <strong>{formatDownloads(totalDownloads)}</strong>
               <span>APK downloads</span>
             </div>
+            <div>
+              <strong>{preReleases}</strong>
+              <span>Pre-releases</span>
+            </div>
           </div>
         </header>
 
         <div className="releases-layout">
           <aside className="release-aside">
-            <div className="aside-card">
-              <h2>Latest stable</h2>
+            <div className="aside-card aside-card--latest">
+              <div className="aside-card-head">
+                <h2>Latest stable</h2>
+                <span className="release-dot" aria-hidden="true" />
+              </div>
               <p>
                 {latestStable && latestApk
                   ? "The current recommended build for most devices."
@@ -86,12 +97,43 @@ export default async function ReleasesPage() {
             </div>
 
             <div className="aside-card">
+              <h2>Channels</h2>
+              <ul className="channel-list">
+                <li>
+                  <span className="release-dot" aria-hidden="true" />
+                  <div>
+                    <b>Stable</b>
+                    <small>Tested builds recommended for daily use.</small>
+                  </div>
+                </li>
+                <li>
+                  <span className="release-dot is-pre" aria-hidden="true" />
+                  <div>
+                    <b>Pre-release</b>
+                    <small>Early builds — expect rough edges.</small>
+                  </div>
+                </li>
+              </ul>
+              {newest && (
+                <p className="aside-newest">
+                  Newest public build: <b>{newest.tag_name}</b>
+                  {newestApk ? ` · ${formatBytes(newestApk.size)}` : ""}
+                </p>
+              )}
+            </div>
+
+            <div className="aside-card">
               <h2>How this list works</h2>
               <p style={{ marginBottom: 14 }}>
                 Release data comes live from GitHub. Drafts stay hidden, and builds without an APK are still listed for
                 reference.
               </p>
-              <a className="text-link" href="https://github.com/senseiCodeHub/KitsuPlay-App/releases" target="_blank" rel="noreferrer">
+              <a
+                className="text-link"
+                href="https://github.com/senseiCodeHub/KitsuPlay-App/releases"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Source releases <ArrowRightIcon size={14} />
               </a>
             </div>
@@ -101,67 +143,9 @@ export default async function ReleasesPage() {
             </p>
           </aside>
 
-          <div className="release-list" id="release-list">
+          <section id="release-list" aria-label="Release list">
             {releases.length ? (
-              releases.map((release, index) => {
-                const apk = apkAsset(release);
-                const isLatestStable = !!latestStable && release.id === latestStable.id;
-
-                return (
-                  <article className={`release-card${isLatestStable ? " is-latest" : ""}`} key={release.id}>
-                    <div className="release-head">
-                      <div className="release-tag">
-                        <span className="release-index">{String(index + 1).padStart(2, "0")}</span>
-                        <b>{release.tag_name}</b>
-                        {isLatestStable && <span className="release-badge">Latest stable</span>}
-                        {release.prerelease && <span className="release-badge release-badge--pre">Pre-release</span>}
-                      </div>
-                      <time dateTime={release.published_at ?? undefined}>{formatDate(release.published_at)}</time>
-                    </div>
-
-                    <h2>{release.name || `KitsuPlay ${release.tag_name}`}</h2>
-
-                    <div className="release-meta">
-                      <span>Published {formatDate(release.published_at)}</span>
-                      {apk && (
-                        <>
-                          <span>APK · {formatBytes(apk.size)}</span>
-                          <span>{formatDownloads(apk.download_count)} downloads</span>
-                        </>
-                      )}
-                      {!apk && <span>No APK attached</span>}
-                    </div>
-
-                    <div className="release-notes">
-                      {release.body?.trim() ? (
-                        release.body
-                          .trim()
-                          .split(/\r?\n/)
-                          .filter(Boolean)
-                          .slice(0, 18)
-                          .map((line, lineIndex) => (
-                            <p key={lineIndex}>{plainText(line)}</p>
-                          ))
-                      ) : (
-                        <p>No release notes were provided for this version.</p>
-                      )}
-                    </div>
-
-                    <div className="release-foot">
-                      <span>{apk ? "Android APK" : "Download unavailable"}</span>
-                      {apk ? (
-                        <a className="btn btn-primary btn-sm" href={apk.browser_download_url} download>
-                          Download APK <DownloadIcon size={15} />
-                        </a>
-                      ) : (
-                        <a className="text-link" href={release.html_url} target="_blank" rel="noreferrer">
-                          View on GitHub <ArrowRightIcon size={14} />
-                        </a>
-                      )}
-                    </div>
-                  </article>
-                );
-              })
+              <ReleasesExplorer releases={views} latestId={latestStable?.id ?? null} />
             ) : (
               <div className="empty-state">
                 <span className="kicker">Nothing here yet</span>
@@ -174,7 +158,7 @@ export default async function ReleasesPage() {
                 </Link>
               </div>
             )}
-          </div>
+          </section>
         </div>
 
         <p className="back-link">

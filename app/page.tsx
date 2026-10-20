@@ -1,14 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { apkAsset, formatBytes, formatDate, formatDownloads, getLatestStableRelease } from "@/lib/github-releases";
+import { Faq } from "@/components/Faq";
 import { FoxMark } from "@/components/FoxMark";
 import { HeroAura } from "@/components/HeroAura";
 import { Reveal } from "@/components/Reveal";
+import { TypingSearch } from "@/components/TypingSearch";
 import {
   ArrowRightIcon,
   BookmarkIcon,
   CheckIcon,
-  ChevronDownIcon,
   ClockIcon,
   DownloadIcon,
   LayersIcon,
@@ -18,92 +19,6 @@ import {
 } from "@/components/Icons";
 
 const marqueeWords = ["Anime", "Movies", "Series", "Search", "Watchlist", "Playback progress", "Downloads", "Every release"];
-
-const features = [
-  {
-    className: "bento-card--search",
-    icon: <SearchIcon size={20} />,
-    title: "Sniff out anything",
-    copy: "Search anime, movies and series, then jump straight into details and episodes.",
-    mock: (
-      <div className="mock-search">
-        <div className="mock-search-bar">
-          <SearchIcon size={14} />
-          <span>Search anime, movies, series</span>
-          <i className="mock-caret" />
-        </div>
-        <div className="mock-results" aria-hidden="true">
-          <span className="mock-poster mock-poster--a" />
-          <span className="mock-poster mock-poster--b" />
-          <span className="mock-poster mock-poster--c" />
-        </div>
-      </div>
-    )
-  },
-  {
-    className: "bento-card--resume",
-    icon: <PlayIcon size={20} />,
-    title: "Right where you stopped",
-    copy: "Playback progress is remembered, so the next episode is one tap away.",
-    mock: (
-      <div className="mock-resume" aria-hidden="true">
-        <div className="mock-resume-row">
-          <span>Continue watching</span>
-          <b>62%</b>
-        </div>
-        <div className="mock-track">
-          <i />
-        </div>
-      </div>
-    )
-  },
-  {
-    className: "bento-card--list",
-    icon: <BookmarkIcon size={20} />,
-    title: "A watchlist that waits",
-    copy: "Keep everything you want to watch in one tidy place.",
-    mock: (
-      <div className="mock-fan" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-    )
-  },
-  {
-    className: "bento-card--download",
-    icon: <DownloadIcon size={20} />,
-    title: "Take it offline",
-    copy: "Saved downloads stay in your library for when the signal drops.",
-    mock: (
-      <div className="mock-file" aria-hidden="true">
-        <span className="mock-file-icon">
-          <DownloadIcon size={16} />
-        </span>
-        <div>
-          <b>KitsuPlay.apk</b>
-          <small>Ready to install</small>
-        </div>
-        <CheckIcon size={16} />
-      </div>
-    )
-  },
-  {
-    className: "bento-card--versions",
-    icon: <LayersIcon size={20} />,
-    title: "No build left behind",
-    copy: "Every public release stays listed with its notes, sizes and downloads.",
-    mock: (
-      <ul className="mock-versions" aria-hidden="true">
-        <li>
-          Latest stable <i />
-        </li>
-        <li>Previous build</li>
-        <li>Pre-release</li>
-      </ul>
-    )
-  }
-];
 
 const appScreens = [
   {
@@ -347,25 +262,156 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="features">
+      <section className="section features-section" id="features">
         <div className="container">
-          <Reveal className="section-head section-head--center">
-            <span className="kicker">Why KitsuPlay</span>
-            <h2 className="section-title">
-              Small app. <span className="text-gradient">Sharp instincts.</span>
-            </h2>
-            <p>Find it, keep it, finish it. KitsuPlay stays out of the way while you watch.</p>
+          <Reveal className="features-head">
+            <div>
+              <span className="kicker">Why KitsuPlay</span>
+              <h2 className="section-title">
+                Small app. <span className="text-gradient">Sharp instincts.</span>
+              </h2>
+            </div>
+            <p className="features-lede">
+              Find it, keep it, finish it. Every step of the watch loop is built to feel like one tap.
+            </p>
           </Reveal>
 
           <Reveal className="bento" delay={80}>
-            {features.map((feature) => (
-              <article className={`bento-card ${feature.className}`} key={feature.title}>
-                <span className="bento-icon">{feature.icon}</span>
-                <h3>{feature.title}</h3>
-                <p>{feature.copy}</p>
-                {feature.mock}
-              </article>
-            ))}
+            <article className="bento-card bento-card--search">
+              <span className="bento-icon">
+                <SearchIcon size={20} />
+              </span>
+              <h3>Sniff out anything</h3>
+              <p>Search anime, movies and series, then jump straight into details and episodes.</p>
+              <div className="search-demo" aria-hidden="true">
+                <div className="search-bar">
+                  <SearchIcon size={15} />
+                  <TypingSearch />
+                  <span className="search-scope">All</span>
+                </div>
+                <div className="search-results">
+                  <Image
+                    src="/app-art/search.jpg"
+                    alt=""
+                    width={720}
+                    height={332}
+                    sizes="(max-width: 720px) 88vw, (max-width: 1100px) 88vw, 380px"
+                  />
+                </div>
+              </div>
+            </article>
+
+            <article className="bento-card bento-card--resume">
+              <span className="bento-icon">
+                <PlayIcon size={20} />
+              </span>
+              <h3>Right where you stopped</h3>
+              <p>Playback progress is remembered, so the next episode is one tap away.</p>
+              <div className="resume-demo" aria-hidden="true">
+                <div className="resume-art">
+                  <Image
+                    className="resume-art-bg"
+                    src="/app-art/resume.jpg"
+                    alt=""
+                    width={700}
+                    height={392}
+                    sizes="(max-width: 720px) 88vw, (max-width: 1100px) 44vw, 300px"
+                  />
+                  <Image
+                    className="resume-art-img"
+                    src="/app-art/resume.jpg"
+                    alt=""
+                    width={700}
+                    height={392}
+                    sizes="(max-width: 720px) 88vw, (max-width: 1100px) 44vw, 300px"
+                  />
+                </div>
+                <div className="resume-meta">
+                  <span>Continue watching</span>
+                  <b>62%</b>
+                </div>
+                <div className="resume-track">
+                  <i />
+                </div>
+              </div>
+            </article>
+
+            <article className="bento-card bento-card--list">
+              <span className="bento-icon">
+                <BookmarkIcon size={20} />
+              </span>
+              <h3>A watchlist that waits</h3>
+              <p>Keep everything you want to watch in one tidy place.</p>
+              <div className="poster-fan" aria-hidden="true">
+                <Image className="fan-a" src="/app-art/poster-anime.jpg" alt="" width={212} height={290} sizes="82px" />
+                <Image className="fan-b" src="/app-art/poster-series.jpg" alt="" width={212} height={290} sizes="82px" />
+                <Image className="fan-c" src="/app-art/poster-movies.jpg" alt="" width={212} height={290} sizes="82px" />
+              </div>
+            </article>
+
+            <article className="bento-card bento-card--download">
+              <span className="bento-icon">
+                <DownloadIcon size={20} />
+              </span>
+              <h3>Take it offline</h3>
+              <p>Saved downloads stay in your library for when the signal drops.</p>
+              <div className="offline-demo" aria-hidden="true">
+                <div className="offline-row">
+                  <span className="offline-thumb">
+                    <Image
+                      src="/app-art/offline.jpg"
+                      alt=""
+                      width={350}
+                      height={570}
+                      sizes="40px"
+                    />
+                  </span>
+                  <div>
+                    <b>Dr. STONE</b>
+                    <small>12 of 24 · no signal needed</small>
+                  </div>
+                  <CheckIcon size={15} />
+                </div>
+                <span className="offline-chip">
+                  <DownloadIcon size={11} />
+                  Available offline
+                </span>
+              </div>
+            </article>
+
+            <article className="bento-card bento-card--versions">
+              <span className="bento-icon">
+                <LayersIcon size={20} />
+              </span>
+              <h3>No build left behind</h3>
+              <p>Every public release stays listed with its notes, sizes and downloads.</p>
+              <ul className="update-list" aria-hidden="true">
+                <li className="is-current">
+                  <i className="update-dot" />
+                  <div>
+                    <b>{release?.tag_name ?? "Latest stable"}</b>
+                    <small>Newest release</small>
+                  </div>
+                  <span>APK</span>
+                </li>
+                <li>
+                  <i className="update-dot" />
+                  <div>
+                    <b>Previous builds</b>
+                    <small>Full notes kept</small>
+                  </div>
+                  <span>Listed</span>
+                </li>
+                <li>
+                  <i className="update-dot" />
+                  <div>
+                    <b>Pre-releases</b>
+                    <small>Clearly labelled</small>
+                  </div>
+                  <span>Tagged</span>
+                </li>
+              </ul>
+            </article>
           </Reveal>
         </div>
       </section>
@@ -446,17 +492,9 @@ export default async function HomePage() {
             <p>The bits people usually ask before their first install.</p>
           </Reveal>
 
-          <div className="faq-list">
-            {faqs.map((faq) => (
-              <details className="faq" key={faq.q}>
-                <summary>
-                  {faq.q}
-                  <ChevronDownIcon size={18} />
-                </summary>
-                <p>{faq.a}</p>
-              </details>
-            ))}
-          </div>
+          <Reveal delay={80}>
+            <Faq items={faqs} />
+          </Reveal>
         </div>
       </section>
 
