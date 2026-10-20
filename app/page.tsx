@@ -213,16 +213,18 @@ export default async function HomePage() {
 
           <div className="hero-visual">
             <div className="halo" aria-hidden="true" />
-            <div className="phone">
-              <div className="phone-screen">
-                <Image
-                  src="/app-screens/home.jpg"
-                  alt="KitsuPlay app home screen showing a featured title"
-                  width={720}
-                  height={1544}
-                  priority
-                  sizes="(max-width: 680px) 280px, 292px"
-                />
+            <div className="phone-float">
+              <div className="phone">
+                <div className="phone-screen">
+                  <Image
+                    src="/app-screens/home.jpg"
+                    alt="KitsuPlay app home screen showing a featured title"
+                    width={720}
+                    height={1544}
+                    priority
+                    sizes="(max-width: 680px) 280px, 292px"
+                  />
+                </div>
               </div>
             </div>
 

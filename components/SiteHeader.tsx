@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRightIcon, CloseIcon, MenuIcon } from "./Icons";
 
 const links = [
@@ -14,14 +14,31 @@ const links = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const progressRef = useRef<HTMLSpanElement>(null);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    onScroll();
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      progressRef.current?.style.setProperty("transform", `scaleX(${progress})`);
+      setScrolled(window.scrollY > 10);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -81,6 +98,7 @@ export function SiteHeader() {
             </button>
           </div>
         </div>
+        <span className="scroll-progress" ref={progressRef} aria-hidden="true" />
       </header>
 
       {open && (
