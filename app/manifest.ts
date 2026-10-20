@@ -6,11 +6,11 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Official KitsuPlay Android app downloads and release history.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0b0b10",
-    theme_color: "#ff7138",
+    background_color: "#080605",
+    theme_color: "#ff6a2c",
     icons: [
-      { src: "https://raw.githubusercontent.com/senseiCodeHub/KitsuPlay/main/assets/favicon/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { src: "https://raw.githubusercontent.com/senseiCodeHub/KitsuPlay/main/assets/favicon/android-chrome-512x512.png", sizes: "512x512", type: "image/png" }
+      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" }
     ]
   };
 }
