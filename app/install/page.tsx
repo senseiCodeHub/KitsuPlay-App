@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { apkAsset, formatBytes, getLatestStableRelease } from "@/lib/github-releases";
+import { Faq } from "@/components/Faq";
 import { Reveal } from "@/components/Reveal";
-import { ArrowRightIcon, CheckIcon, ChevronDownIcon, DownloadIcon, ShieldIcon } from "@/components/Icons";
+import { ArrowRightIcon, CheckIcon, DownloadIcon, ShieldIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "Installation Guide",
@@ -134,16 +135,8 @@ export default async function InstallPage() {
             <p>Android throws a few predictable warnings at sideloaded apps. Here&apos;s what they usually mean.</p>
           </Reveal>
 
-          <Reveal className="faq-list" delay={100}>
-            {troubleshooting.map((item) => (
-              <details className="faq" key={item.q}>
-                <summary>
-                  {item.q}
-                  <ChevronDownIcon size={18} />
-                </summary>
-                <p>{item.a}</p>
-              </details>
-            ))}
+          <Reveal delay={100}>
+            <Faq items={troubleshooting} />
           </Reveal>
         </div>
 

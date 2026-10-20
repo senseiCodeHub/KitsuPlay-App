@@ -322,6 +322,7 @@ ol {
   place-items: center;
   width: 38px;
   height: 38px;
+  padding: 5px;
   border-radius: 13px;
   border: 1px solid rgba(255, 205, 160, 0.3);
   background:
@@ -344,8 +345,8 @@ ol {
 }
 
 .brand-mark img {
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
 }
@@ -1416,6 +1417,7 @@ ol {
   width: 58px;
   height: 58px;
   flex-shrink: 0;
+  padding: 9px;
   border: 1px solid rgba(255, 205, 160, 0.26);
   border-radius: 16px;
   background:
@@ -2840,6 +2842,7 @@ ol {
 .aside-latest-app img {
   width: 46px;
   height: 46px;
+  padding: 7px;
   border: 1px solid var(--line-strong);
   border-radius: 13px;
   background: radial-gradient(120% 120% at 30% 10%, rgba(255, 220, 180, 0.16), transparent 62%);
@@ -3029,41 +3032,116 @@ ol {
   appearance: none;
 }
 
-.sort-select {
+.sort-menu {
   position: relative;
+}
+
+.sort-trigger {
   display: inline-flex;
   align-items: center;
+  gap: 10px;
   height: 40px;
-  padding: 0 32px 0 12px;
+  padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 11px;
   background: rgba(8, 6, 5, 0.45);
-  color: var(--muted);
-  transition: border-color 0.25s ease;
-}
-
-.sort-select:hover,
-.sort-select:focus-within {
-  border-color: rgba(255, 193, 120, 0.36);
-}
-
-.sort-select select {
-  appearance: none;
-  border: 0;
-  background: none;
-  padding: 0;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 500;
-  color: inherit;
+  color: var(--muted);
   cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.sort-trigger:hover,
+.sort-trigger[aria-expanded="true"] {
+  color: var(--cream);
+  border-color: rgba(255, 193, 120, 0.36);
+  background: rgba(255, 246, 236, 0.04);
+}
+
+.sort-trigger:focus-visible {
+  outline: 2px solid rgba(255, 193, 120, 0.5);
+  outline-offset: 2px;
+}
+
+.sort-trigger svg {
+  color: #ffb877;
+  transition: transform 0.3s var(--ease);
+}
+
+.sort-trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.sort-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  display: grid;
+  gap: 2px;
+  min-width: 196px;
+  padding: 6px;
+  border: 1px solid rgba(255, 205, 160, 0.18);
+  border-radius: 15px;
+  background: linear-gradient(168deg, #1a120b, #110b08 70%);
+  box-shadow:
+    0 26px 50px -22px #000,
+    inset 0 1px 0 rgba(255, 246, 236, 0.05);
+  transform-origin: top right;
+  animation: menu-in 0.18s var(--ease);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sort-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.sort-option:hover,
+.sort-option:focus-visible {
+  background: rgba(255, 193, 120, 0.1);
+  color: var(--cream);
   outline: none;
 }
 
-.sort-select svg {
-  position: absolute;
-  right: 11px;
-  pointer-events: none;
+.sort-option.is-selected {
+  background: rgba(255, 143, 70, 0.12);
+  color: #ffd7b3;
+}
+
+.sort-option svg {
+  flex-shrink: 0;
   color: #ffb877;
 }
 
@@ -3681,10 +3759,6 @@ ol {
     border-radius: 11px;
   }
 
-  .brand-mark img {
-    width: 28px;
-    height: 28px;
-  }
 
   .header-cta {
     height: 38px;

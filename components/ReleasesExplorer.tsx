@@ -11,6 +11,7 @@ import {
   DownloadIcon,
   SearchIcon
 } from "./Icons";
+import { SortMenu } from "./SortMenu";
 
 const CHANNELS = [
   { value: "all", label: "All" },
@@ -19,6 +20,11 @@ const CHANNELS = [
 ] as const;
 
 type Channel = (typeof CHANNELS)[number]["value"];
+const ORDER_OPTIONS = [
+  { value: "newest", label: "Newest first" },
+  { value: "oldest", label: "Oldest first" },
+  { value: "downloads", label: "Most downloaded" }
+] as const;
 const NOTE_LIMIT = 6;
 
 export function ReleasesExplorer({ releases, latestId }: { releases: ReleaseView[]; latestId: number | null }) {
@@ -96,18 +102,7 @@ export function ReleasesExplorer({ releases, latestId }: { releases: ReleaseView
             />
           </label>
 
-          <label className="sort-select">
-            <select
-              value={order}
-              onChange={(event) => setOrder(event.target.value as "newest" | "oldest" | "downloads")}
-              aria-label="Sort releases"
-            >
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="downloads">Most downloaded</option>
-            </select>
-            <ChevronDownIcon size={14} />
-          </label>
+          <SortMenu value={order} options={ORDER_OPTIONS} onChange={setOrder} label="Sort releases" />
         </div>
       </div>
 
